@@ -1,0 +1,46 @@
+version: '1'
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    restart: unless-stopped
+    command: -H unix:///var/run/docker.sock
+    network_mode: "host"
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /home/media/portainer/date:/data
+    qbittorrent:
+    image: ghcr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    network_mode: "host"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Zurich
+      - WEBUI_PORT=8080
+    volumes:
+      - /path/to/appdata/config:/config
+      - ${PATH_MEDIA}:/data
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 8080:8080
+    restart: unless-stopped
+  plex:
+    container_name: plex
+    image: ghcr.io/linuxserver/plex:arm64v8-1.41.9.9961-46083195d-ls276
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+      - PLEX_CLAIM=claim-HH5Eudaip4HVCMh_XQjk
+    network_mode: "host"
+    volumes:
+      - ./config:/config
+      - ./transcode:/transcode
+      - ${PATH_MEDIA}:/data

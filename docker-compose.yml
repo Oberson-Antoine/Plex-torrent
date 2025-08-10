@@ -13,7 +13,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - /home/media/portainer/date:/data
-    qbittorrent:
+  qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
     container_name: qbittorrent
     network_mode: "host"
